@@ -1,0 +1,70 @@
+CREATE DATABASE SCD;
+CREATE TABLE STG_TABLE(ID INT,NAME STRING,EFF_DATE current_timestamp(),EXP_DATE current_timestamp()) 
+
+CREATE TABLE TARGET_TABLE(ID INT,NAME STRING,EFF_DATE current_timestamp(),EXP_DATE current_timestamp())
+
+-----------------------------------------------------------------------------------------------------------
+CYCLE 1 :
+
+STG:
+
+ID | NAME | EFF_DATE  | EXP_DATE
+
+insert into stg_table select 1,'Mukesh','2015-02-18 04:50:17.539','2999-12-31 00:00:00.000';
+insert into stg_table select 2,'Vijay','2016-03-18 04:50:17.539','2999-12-31 00:00:00.000';
+insert into stg_table select 3,'Seema','2017-04-18 04:50:17.539','2999-12-31 00:00:00.000';
+insert into stg_table select 4,'Mukul','2017-05-18 04:50:17.539','2999-12-31 00:00:00.000';
+
+insert into stg_table select 5,'Mukul','2017-05-18 04:50:17.539','2017-05-18 04:50:17.539';
+insert into stg_table select 6,'Kulkarni','2017-05-18 04:50:17.539','2018-05-18 04:50:17.539';
+insert into stg_table select 7,'Priyanka','2017-05-18 04:50:17.539','2018-01-18 04:50:17.539';
+
+insert into stg_table select 1,'Mukesh Suyal',current_timestamp(),'2999-12-31 00:00:00.000';
+insert into stg_table select 2,'Vijay Joshi',current_timestamp(),'2999-12-31 00:00:00.000';
+insert into stg_table select 3,'Seema patel',current_timestamp(),'2999-12-31 00:00:00.000';
+
+insert into stg_table select 11,'Seema','2017-04-18 04:50:17.539','2999-12-31 00:00:00.000';
+
+
+
+
+
+
+
+1,'mukesh',current_timestamp',current_timestamp+100
+2,'Vikas',current_timestamp',current_timestamp+100
+
+
+TARGET :
+
+First time it will be empty 
+
+
+---------------------------------------------------------------
+CYCLE 2:
+1,'mukesh SUYAL',current_timestamp',current_timestamp+100
+3,'Vikas KUMAR ',current_timestamp',current_timestamp+100
+ 
+
+================================================================================================================
+
+Q1 :Expired Records
+ select * from target_table where exp_date != '2999-12-31 00:00:00';
+
+Q2 : Suppose we are monitoring on the column 'name'
+#  Select all the records which are not changed from STG and HIST using inner join and filter on HIST.column = STG.column as #   below
+
+select tgt.* from target_table tgt 
+inner join stg_table stg
+on tgt.id = stg.id
+where tgt.name = stg.name
+
+
+Q3 :
+Select all the new and updated records which are changed from STG_TAB using exclusive left join with HIST_TAB and set expiry and effective date as below
+
+select stg.id,stg.name,current_timestamp(),'2999-12-31 00:00:00' from stg_table stg 
+left join
+(select * from target_table where exp_date = '2999-12-31 00:00:00')tgt
+on tgt.id = stg.id
+where tgt.id is null or tgt.name != stg.name

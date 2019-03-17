@@ -1,0 +1,141 @@
+1. Optimizations and Performance in HIVE
+
+2. Partitioning and Bucketing in HIVE
+
+3. Suppose I have a table with 100 partitions and would like to see the data in 5th bucket
+
+4.
+class(a int,b string,c int..... )
+Read a text file from a location and create a table in Spark by creating the above schema(whole program)
+
+-------------------------------------------------------------------------------------------------------
+# Reading to RDD then create a table in Spark
+val spark = SparkSession
+  .builder()
+  .appName("Spark SQL basic example")
+  .config("spark.some.config.option", "some-value")
+  .getOrCreate()
+
+RDD1 = spark.textFile("examples/src/main/resources/people.txt")   # simply reading data to RDD
+RDD2 = RDD1.map(lambda x:x.split(',')                             # spliting by comma
+RDD3 = RDD2.map(lambda p:(p[0],p[1].strip()))                     # each line converted to a Tuple 
+
+# creating scheme 
+schemastring = "name age"
+fields = [StructField(fieldname StringType()) for fieldname in schemastring.split()]
+schema = StructType(fields)
+
+#Apply the schema to the RDD
+
+schemapeople = spark.createDataFrame(RDD3,schema)
+
+schemapeople.createOrReplaceTemporaryView("my_table")
+
+# SQL can be run over DataFrames that have been registered as a table.
+
+results = spark.sql("select name from my_table)
+
+results.show()
+
+
+-----------------------------------------------------------------------------------------------------------
+5. Sqoop - If the data we are importing does not have primary key , can we read it ? Yes ..how ..No..why 
+
+If your table has no primary key defined then you have to give -m 1 option for importing the data or you have to provide --split-by argument with some column name, otherwise it gives the error:  
+
+ERROR tool.ImportTool: Error during import: No primary key could be found for table <table_name>. Please specify one with --split-by or perform a sequential import with '-m 1'
+
+sqoop import \
+    --connect jdbc:mysql://localhost/test_db \
+    --username root \
+    --password **** \
+    --table user \
+    --target-dir /user/root/user_data \
+    --columns "first_name, last_name, created_date"
+    -m 1
+
+sqoop import \
+    --connect jdbc:mysql://localhost/test_db \
+    --username root \
+    --password **** \
+    --table user \
+    --target-dir /user/root/user_data \
+    --columns "first_name, last_name, created_date"
+    --split-by created_date
+
+Description: Usually, when you perform a Sqoop job internally it searches for the primary key in the table. If there is no primary key the Sqoop job fails and the error looks like this" Error during import: No primary key could be found for the table . Please specify one with --split-by or perform a sequential import with '-m 1' ". The suggestion describes there are two alternative approaches to this scenario. 
+Best way is option 2
+To specify the number of mappers as 1 (default it takes 4). So by specifying the number of mappers to 1, the task will be sequential and identical to a single threaded task. This will succeed only when you are targeting a small table if in case if you are looking for a large import this will fail as the task tends to run forever.
+The best approach is to use split-by where you can specify the number of mappers on the bases of indexed columns or splitting column manually( with queries ).
+
+
+-------------------------------------------
+
+6.
+id      name       salary       date
+1        aa         12k         today
+2        bb         13k         today
+3        cc         13k         today
+
+id      name       salary       data
+2        bb         15k         tommorow
+3        cc         16k         tommorow
+
+7.How to update using Hive ? Write the whole Query ?
+
+
+8.
+Spark Architecture
+
+9.
+Which tool you are using for Spark? // I said Pycharm
+
+10.
+How do you deploy your code to production ?  // I gave the RequestIT funda
+
+11.
+If any bug or performance in Prod , how u fix that ?  // I said bring code in dev , use proper colesce/repartion etc (I was not confident)
+
+ 
+12. Describe your project in Big data
+
+13.Mapreduce changes over the time ...differences
+
+14.Different types of data in Hive 
+
+15.Which 2 properties we give for dynamic partititon in HIVE
+
+
+
+==============================================================================
+
+
+
+In the simplest form, the default data source (parquet unless otherwise configured by spark.sql.sources.default) will be used for all operations.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

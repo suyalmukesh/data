@@ -1,0 +1,303 @@
+1. WHY DO WE NEED TO CREATE EXTERNAL TABLES ? EXPLAIN THE BUSINESS USE CASES FOR CREATING INTERNAL OR EXTERNAL HIVE TABLES ?
+
+Hive tables can be created as EXTERNAL or INTERNAL. This is a choice that affects how data is loaded, controlled, and managed.
+
+Use EXTERNAL tables when:
+
+The data is also used outside of Hive. For example, the data files are read and processed by an existing program 
+that doesn't lock the files.
+Data needs to remain in the underlying location even after a DROP TABLE. This can apply if you are pointing 
+multiple schemas (tables or views) at a single data set or if you are iterating through various possible schemas.
+You want to use a custom location such as ASV.
+Hive should not own data and control settings, dirs, etc., you have another program or process that will do 
+those things.
+You are not creating table based on existing table (AS SELECT).
+
+Use INTERNAL tables when:
+
+The data is temporary.
+
+You want Hive to completely manage the lifecycle of the table and data.
+---
+For External Tables -
+
+External table stores files on the HDFS server but tables are not linked to the source file completely.
+If you delete an external table the file still remains on the HDFS server.
+As an example if you create an external table called “table_test” in HIVE using HIVE-QL and link the table to file “file”, 
+then deleting “table_test” from HIVE will not delete “file” from HDFS.
+External table files are accessible to anyone who has access to HDFS file structure and therefore security needs to be managed at the HDFS file/folder level.
+Meta data is maintained on master node, and deleting an external table from HIVE only deletes the metadata not the data/file.
+
+For Internal Tables-
+
+Stored in a directory based on settings in hive.metastore.warehouse.dir, by default internal tables are stored in the following 
+directory “/user/hive/warehouse” you can change it by updating the location in the config file .
+Deleting the table deletes the metadata and data from master-node and HDFS respectively.
+Internal table file security is controlled solely via HIVE. Security needs to be managed within HIVE, probably at the schema level (depends on organization).
+Hive may have internal or external tables, this is a choice that affects how data is loaded, controlled, and managed.
+
+Use EXTERNAL tables when:
+
+The data is also used outside of Hive. For example, the data files are read and processed by an existing program that doesn’t lock the files.
+Data needs to remain in the underlying location even after a DROP TABLE. 
+This can apply if you are pointing multiple schema (tables or views) at a single data set or if you are iterating through various possible schema.
+Hive should not own data and control settings, directories, etc., you may have another program or process that will do those things.
+You are not creating table based on existing table (AS SELECT).
+Use INTERNAL tables when:
+
+The data is temporary.
+You want Hive to completely manage the life-cycle of the table and data.
+Source :
+
+===========================================
+
+2. SPLIT BY COLUMN IN SQOOP , HOW WE CHOOSE THE COLUMN IN SPLIT-BY IN SQOOP ?
+
+Things to remember for split-by -
+  1. Col should be indexed
+  2. Values in the field should be sparse
+  3. alo often it should be sequence generated or evenly incremented
+  4. It should not have NULL values , NULL values will be ignored.
+  5. The split-by coloumns need not be unique .
+
+Generally , we need to split-by numeric col. But we are splitting by non-numeric col also.We need to add the setting in import statement as -
+
+--Dord.apache.sqoop.splitter.allow-text-splitter=true 
+
+BOUNDARY QUERY :
+
+
+3. WHEN DO WE CREATE STATIC PARTITION AND WHEN DO WE CREATE DYNAMIC PARTITION , USE CASES?
+
+Partitioning in Hive is very useful to prune data during query to reduce query times.
+Partitions are created when data is inserted into table. Depending on how you load data you would need partitions. 
+Usually when loading files (big files) into Hive tables static partitions are preferred. That saves your time in loading data 
+compared to dynamic partition. You "statically" add a partition in table and move the file into the partition of the table. 
+Since the files are big they are usually generated in HDFS. You can get the partition column value form the filename, day of date etc 
+without reading the whole big file.
+
+Incase of dynamic partition whole big file i.e. every row of the data is read and data is partitioned through a MR job into
+the destination tables depending on certain field in file. So usually dynamic partition are useful when you are doing sort of a
+ETL flow in your data pipeline. 
+e.g. you load a huge file through a move command into a Table X. then you run a inert query into a Table Y and 
+partition data based on field in table X say day , country. You may want to further run a ETL step to partition the data in
+country partition in Table Y into a Table Z where data is partitioned based on cities for a particular country only. etc.
+
+Thus depending on your end table or requirements for data and in what form data is produced at source you may choose static or dynamic partition.
+
+----
+
+In static partitioning we need to specify the partition column value in each and every LOAD statement.
+
+suppose we are having partition on column country for table t1(userid, name,occupation, country), so each time we need to provide country value
+
+hive>LOAD DATA INPATH '/hdfs path of the file' INTO TABLE t1 PARTITION(country="US")
+hive>LOAD DATA INPATH '/hdfs path of the file' INTO TABLE t1 PARTITION(country="UK")
+
+Dynamic partition allow us not to specify partition column value each time. the approach we follows is as below:
+
+Create a non-partitioned table t2 and insert data into it.
+now create a table t1 partitioned on intended column(say country).
+load data in t1 from t2 as below:
+
+hive> INSERT INTO TABLE t2 PARTITION(country) SELECT * from T1;
+make sure that partitioned column is always the last one in non partitioned table(as we are having country column in t2)
+
+
+                                                    ======
+
+Static Partition in Hive
+
+Insert input data files individually into a partition table is Static Partition Usually when loading files (big files) into Hive tables 
+static partitions are preferred
+
+Static Partition saves your time in loading data compared to dynamic partition You “statically” add a partition in table 
+and move the file into the partition of the table.
+
+We can alter the partition in static partition
+
+You can get the partition column value form the filename, day of date etc without reading the whole big file. 
+
+If you want to use Static partition in hive you should set property
+set hive.mapred.mode = strict
+
+This property set by default in hive-site.xml Static partition is in Strict Mode You should use where clause to use limit in static
+partition You can perform Static partition on Hive Manage table or external table.
+
+Dynamic Partition in Hive
+
+single insert to partition table is known as dynamic partition
+Usually dynamic partition load the data from non partitioned table
+Dynamic Partition takes more time in loading data compared to static partition
+When you have large data stored in a table then Dynamic partition is suitable.
+If you want to partition number of column but you don’t know how many columns then also dynamic partition is suitable
+Dynamic partition there is no required where clause to use limit. we can’t perform alter on Dynamic partition
+
+You can perform dynamic partition on hive external table and managed table If you want to use Dynamic partition in hive then 
+mode is in nonstrict mode Here is hive dynamic partition properties you should allow
+
+SET hive.exec.dynamic.partition = true;
+SET hive.exec.dynamic.partition.mode = nonstrict;
+
+EXAMPLES :
+
+Dynamic partitioning in HIVE:
+
+CREATE TABLE temps_orc_partition_date
+(statecode STRING, countrycode STRING, sitenum STRING, paramcode STRING, poc STRING, latitude STRING, longitude STRING, 
+   datum STRING, param STRING, timelocal STRING, dategmt STRING, timegmt STRING, degrees double, uom STRING, mdl STRING,
+   uncert STRING, qual STRING, method STRING, methodname STRING, state STRING, county STRING, dateoflastchange STRING)
+PARTITIONED BY (datelocal STRING)
+STORED AS ORC;
+
+##   Move the “datelocal” column to being last in the SELECT. For dynamic partitioning to work in Hive, this is a requirement.
+
+INSERT INTO TABLE temps_orc_partition_date
+PARTITION (datelocal)
+SELECT statecode, countrycode, sitenum, paramcode, poc, latitude, longitude, datum, param, timelocal, dategmt, 
+timegmt, degrees, uom, mdl, uncert, qual, method, methodname, state, county, dateoflastchange, datelocal
+FROM temps_txt;
+
+
+4. DIFFERENCE BETWEEN PARTITIONING AND BUCKETING ? WHY DO WE NEED THEM , USE CASES? 
+
+There are a few details missing from the previous explanations. To better understand how partitioning and bucketing works, 
+you should look at how data is stored in hive. Let's say you have a table
+
+CREATE TABLE mytable ( 
+         name string,
+         city string,
+         employee_id int ) 
+PARTITIONED BY (year STRING, month STRING, day STRING) 
+CLUSTERED BY (employee_id) INTO 256 BUCKETS
+then hive will store data in a directory hierarchy like
+
+/user/hive/warehouse/mytable/y=2015/m=12/d=02
+
+So, you have to be careful when partitioning, because if you for instance partition by employee_id and you have millions of employees, 
+you'll end up having millions of directories in your file system. The term 'cardinality' refers to the number of possible value a field 
+can have. For instance, if you have a 'country' field, the countries in the world are about 300, so cardinality would be ~300. 
+For a field like 'timestamp_ms', which changes every millisecond, cardinality can be billions. In general, when choosing a field 
+for partitioning, it should NOT HAVE A HIGH CARDINALITY, because you'll end up with way too many directories in your file system.
+
+Clustering aka bucketing on the other hand, will result with a fixed number of files, since you do specify the number of buckets. 
+What hive will do is to take the field, calculate a hash and assign a record to that bucket. But what happens if you use 
+let's say 256 buckets and the field you're bucketing on has a low cardinality (for instance, it's a US state, so can be only
+50 different values) ? You'll have 50 buckets with data, and 206 buckets with no data.
+
+Someone already mentioned how partitions can dramatically cut the amount of data you're querying. So in my example table, 
+if you want to query only from a certain date forward, the partitioning by year/month/day is going to dramatically cut the 
+amount of IO. I think that somebody also mentioned how bucketing can speed up joins with other tables that have 
+exactly the same bucketing, so in my example, if you're joining two tables on the same employee_id, hive can do the 
+join bucket by bucket (even better if they're already sorted by employee_id since it's going to mergesort parts that are
+already sorted, which works in linear time aka O(n) ).
+
+NOTE :
+So, bucketing works well when the field has high cardinality and data is evenly distributed among buckets. 
+Partitioning works best when the cardinality of the partitioning field is not too high.
+
+Also, you can partition on multiple fields, with an order (year/month/day is a good example), while you can bucket on only one field14
+
+Hive Partitioning:
+
+Partition divides large amount of data into multiple slices based on value of a table column(s).
+
+Assume that you are storing information of people in entire world spread across 196+ countries spanning around 500 crores 
+of entries. If you want to query people from a particular country (Vatican city), in absence of partitioning, you have to scan 
+all 500 crores of entries even to fetch thousand entries of a country. If you partition the table based on country, you can fine 
+tune querying process by just checking the data for only one country partition. Hive partition creates a separate directory for
+a column(s) value.
+
+Pros:
+
+Distribute execution load horizontally
+Faster execution of queries in case of partition with low volume of data. e.g. Get the population from "Vatican city" returns very fast
+instead of searching entire population of world.
+Cons:
+
+Possibility of too many small partition creations - too many directories.
+Effective for low volume data for a given partition. But some queries like group by on high volume of data still take long
+time to execute. e.g. Grouping of population of China will take long time compared to grouping of population in Vatican city.
+Partition is not solving responsiveness problem in case of data skewing towards a particular partition value.
+
+Hive Bucketing:
+
+Bucketing decomposes data into more manageable or equal parts.
+
+With partitioning, there is a possibility that you can create multiple small partitions based on column values. 
+If you go for bucketing, you are restricting number of buckets to store the data. This number is defined during 
+table creation scripts.
+
+Pros
+
+Due to equal volumes of data in each partition, joins at Map side will be quicker.
+Faster query response like partitioning
+Cons
+
+You can define number of buckets during table creation but loading of equal volume of data has to be done manually by programmers.
+
+
+5. DIFFERENCE BETWEEN SORT BY , ORDER BY , DISTRIBUTE BY , CLUSTER BY ,AGGREGATE BY KEY :
+
+
+CLUSTER BY :
+
+Cluster By used as an alternative for both Distribute BY and Sort BY clauses in Hive-QL.
+
+Cluster BY clause used on tables present in Hive. Hive uses the columns in Cluster by to distribute the rows among reducers. 
+Cluster BY columns will go to the multiple reducers.
+
+It ensures sorting orders of values present in multiple reducers
+For example, Cluster By clause mentioned on the Id column name of the table employees_guru table. The output when executing this query 
+will give results to multiple reducers at the back end. But as front end it is an alternative clause for both Sort By and Distribute By.
+
+This is actually back end process when we perform a query with sort by, group by, and cluster by in terms of Map reduce framework. 
+So if we want to store results into multiple reducers, we go with Cluster By.
+
+
+
+
+
+
+6. GET THE 5 HIGHEST SALARY USING RDD , USING SPARK DATAFRAME  AND HIVE ?
+       (do some related examples..... )
+
+USING RDD :
+
+Read data into RDD
+Sort the data 
+
+sorter_rdd_desc  = rdd.take(5)[-1]
+df.select("col1",.........).orderBy("salary".desc).limit(3).show()   # This will show all 3 , I need only 3rd
+
+
+
+----------------------------------
+
+USING SPARK DATAFRAME :
+....READ WINDOWING FUNCTION IN SPARK-DATAFRAME
+ 
+
+
+SQL : SELECT <FIELDS> , RANK() OVER(PARTITION BY SALARY ORDER BY SALARY DESC)HIGHEST FROM TABLE
+      WHERE HIGHEST = 5;
+
+      df.window.partition('salary').orderBy('salary').desc().rank()=5   // something like this...
+      in progress <<<<<>>>>>>
+
+
+
+7. WHAT DO YOU MEAN BY SKEWNESS IN DATA , COLUMN etc. ? 
+
+   in progress <<<<>>>>>
+
+-----------------------------------------------------------------------
+RDD 
+
+1. How to get the 10th row of an RDD ?
+
+a=RDD1.take(10)
+a[-1]
+
+----------------------------------------------------------------------------
+

@@ -1,0 +1,19 @@
+SPARK SQL 
+
+=====================================================================
+
+1. DATAFRAME - EXPLAIN 
+         https://www.youtube.com/watch?v=1IoMlAMOPzM
+              
+2. CATALOG INTERFACE (spark.Catalog.listTables.show)
+                   spark.Catalog.listTables("global_temp").show   
+3. DIFFERENCE DATAFRAME DATASET RDD
+4. ALL OPERATIONS IN DATAFRAME
+5. SCHEMAS ON READ
+6. CREATE SCHEMA AND THEN READ
+7. DATAFRAME QL
+8. CONVERT A RDD INTO DATAFRAME
+9. LOAD DATA FROM DATAFRAME TO A HIVE TABLE
+10. IS IT POSSIBLE TO LOAD DATA FROM DATAFRAME TO RDBMS TABLE
+
+=======================================================================

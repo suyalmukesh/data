@@ -1,0 +1,58 @@
+Part One :
+
+-- Read Data directly into dataframe
+
+read_input_file = spark.read.csv("wasb:///data/movies.csv")
+
+read_input_file.show()
+
+read_input_file.getschema()
+read_input_file.getNumPartition()
+
+
+------------------------------------------------------------------------
+
+-- register table and Query
+
+1. Select count(*)
+2. Select Distinct
+3. Check for NULL items
+
+--------------------------------------------------------------------------
+
+-- Create HIVE table One Normal One Transactional
+
+CREATE TABLE DF_TO_HIVE (       )
+PARTITION BY ()
+CLUSTERED BY () INTO 5 BUCKETS
+STORED AS ORC;
+
+CREATE TABLE TRANS_HIVE (   )
+CLUSTERED BY () INTO 10 BUCKETS
+STORED AS ORC
+TBLPROPERTIES('transactional'='true');
+
+INSERT INTO DF_TO_HIVE (    ) SELECT (  )  FROM SPARK_RESIDTERED TABLE;
+
+SELECT * FROM DF_TO_HIVE;
+
+
+sshuser@suyalmukesh-ssh.azurehdinsight.net
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

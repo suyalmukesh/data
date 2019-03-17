@@ -1,0 +1,12 @@
+hdfs dfs -mkdir /user/cloudera/data
+
+LINKS :
+
+JSON READING :
+
+https://github.com/rcongiu/Hive-JSON-Serde#jsonserde---a-readwrite-serde-for-json-data
+
+LANGUAGE MANUAL Apache Hive 
+
+https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-Built-inTable-GeneratingFunctions%28UDTF%29
+

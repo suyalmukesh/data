@@ -1,0 +1,137 @@
+COMPLEX DATA TYPE :
+---------------------------------------------------------------------
+# complex_file
+
+101 first:Amit,last:Mishra bbsr,751024 Hadoop,Hive
+102 first:Aditya,last:Kulkarni bnglr,12345 Hadoop,Hive,Oracle
+103 mid:Aditya,last:Kulkarni bnglr,123412 Hadoop,Hive,Oracle 
+
+---------------------------------------------------------------------
+# Analyse 
+
+Field1 is quite a normal field 
+
+Field2 is like key:value pair , so we will use MAP type here
+
+Field3 is Struct type (city char
+                       pin number ) 
+
+Field4 is Array Type 
+
+-----------------------------------------------------------------------
+
+create table complex_data_type
+(
+emp_id int,
+name map<string,string>,
+location struct<city:string,pin:int>,
+skill_set array<string>
+)
+row format delimited fields terminated by '\t'
+collection items terminated by ','
+map keys terminated by ':';
+
+-------------------------------------------------------------------------
+
+# check if table already exists 
+desc complex_data_type;
+
+--------------------------------------------------------------------------
+
+# now try :
+select * from complex_data_type;
+
+select emp_id,
+       name['first'],
+       location.city,
+       skil_set[0]
+from complex_data_type;
+
+
+=============================================================================
+
+# EXPLODE AND LATERAL VIEW
+
+Explode() takes in an array as input and outputs the elements of array as seperate rows.
+
+Example:
+
+col1 | col2
+A    | [1,2,3] 
+B    | [9,2,6]
+C    | [7]
+D    | [6,9]
+E    | [0,3]
+
+select explode(col2) as mycol from table1;
+
+mycol
+1
+2
+3
+9
+2
+....
+
+LIMITATIONS OF EXPLODE FUNCTION :
+
+We can only select the explode coloumn , we can't select the other coloumn along with explode col.
+
+So to overcome this we will use lateral view functionality 
+
+How it works:
+Lateral View will create a Virtual table for the explode col and then this virtual table will be joined to our base table to get the desired output .
+
+table2:
+author_name         | books_name
+Salman Rushdie      |[Grimus,Shame,Fury]
+Thomas Otway        |[Don carlos,The  Orphan ] 
+
+output:
+author_name    |books_name
+Salman Rushdie |Grimus
+Salman Rushdie |Shame
+Salman Rushdie |Fury
+Thomas Otway   |Don carlos
+Thomas Otway   |The Orphan
+
+
+select author_name,dummy_books_name from table2
+lateral view explode(books_name) dummy as dummy_books_name;
+
+# Note : dummy is the virtual table name and dummy_books_name is the column name 
+
+
+
+----------------------
+
+Another use of lateral view is that it will take the keys and values of the map data type
+
+table3:
+
+col1
+----
+{"12":"abc"}
+{"34","def"}
+{"56","gfhi"}
+{"78","jkl"}
+
+output:
+key    |  Value
+12     | abc
+34     | def
+56     | gfhi
+78     | jkl
+
+select key,value from table3 lateral view explode(col1) dummy as key,value;
+
+
+ 
+
+
+
+
+
+
+
+ 

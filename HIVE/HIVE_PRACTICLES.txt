@@ -1,0 +1,117 @@
+DDLs
+1.CREATE DATABASE
+hive> CREATE DATABASE [IF NOT EXISTS] userdb;
+
+2.DROP DATABASE
+DROP DATABASE IF EXISTS userdb;
+
+--------------------------------------------------------------------------------------
+3.CREATE TABLE
+
+CREATE TABLE user_info_bucketed(user_id BIGINT, firstname STRING, lastname STRING)
+COMMENT 'A bucketed copy of user_info'
+PARTITIONED BY(ds STRING)
+CLUSTERED BY(user_id) INTO 256 BUCKETS;
+
+hive> CREATE TABLE IF NOT EXISTS employee ( eid int, name String,
+salary String, destination String)
+COMMENT ‘Employee details’
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ‘\t’
+LINES TERMINATED BY ‘\n’
+STORED AS TEXTFILE;
+
+LOAD DATA
+
+LOAD DATA [LOCAL] INPATH 'filepath' [OVERWRITE] INTO TABLE tablename 
+[PARTITION (partcol1=val1, partcol2=val2 ...)]
+
+----------------------------------------------------------------------------------
+4.DROP TABLE
+DROP TABLE [IF EXISTS] table_name;
+
+---------------------------------------------------------------------------------
+5.ALTER TABLE
+
+ALTER TABLE name RENAME TO new_name
+ALTER TABLE name ADD COLUMNS (col_spec[, col_spec ...])
+ALTER TABLE name DROP [COLUMN] column_name
+ALTER TABLE name CHANGE column_name new_name new_type
+ALTER TABLE name REPLACE COLUMNS (col_spec[, col_spec ...])
+
+ALTER TABLE table_name ADD [IF NOT EXISTS] PARTITION partition_spec
+[LOCATION 'location1'] partition_spec [LOCATION 'location2'] ...;
+partition_spec:
+: (p_column = p_col_value, p_column = p_col_value, ...)
+
+ALTER TABLE employee ADD PARTITION (year=’2012’) location '/2012/part2012';
+
+ALTER TABLE table_name PARTITION partition_spec RENAME TO PARTITION partition_spec;
+
+ALTER TABLE employee DROP [IF EXISTS]  PARTITION (year=’1203’);
+
+--------------------------------------------------------------------------------------
+6.CREATE TABLE WITH PARTITION
+
+7.CREATE TABLE WITH BUCKETS
+Tables or partitions are sub-divided into buckets, to provide extra structure to the data that may be used for more efficient querying. Bucketing works based on the value of hash function of some column of a table.
+
+CREATE TABLE page_view(viewTime INT, userid BIGINT,
+                page_url STRING, referrer_url STRING,
+                ip STRING COMMENT 'IP Address of the User')
+COMMENT 'This is the page view table'
+PARTITIONED BY(dt STRING, country STRING)
+CLUSTERED BY(userid) SORTED BY(viewTime) INTO 32 BUCKETS
+ROW FORMAT DELIMITED
+        FIELDS TERMINATED BY '1'
+        COLLECTION ITEMS TERMINATED BY '2'
+        MAP KEYS TERMINATED BY '3'
+STORED AS SEQUENCEFILE;
+
+
+
+8.HIVE TABLE USING UDFs
+9.HIVE VIEWS AND INDEXES
+CREATE VIEW emp_30000 AS
+SELECT * FROM employee
+WHERE salary>30000;
+
+DROP VIEW view_name
+
+ CREATE INDEX inedx_salary ON TABLE employee(salary)
+AS 'org.apache.hadoop.hive.ql.index.compact.CompactIndexHandler';
+
+
+DROP INDEX <index_name> ON <table_name>
+
+
+10.BUILT-IN FUNCTIONS
+11.MAP SIDE JOIN 
+----------------------------------------------------------------
+DMLs
+1.SELECT WHERE CLAUSE
+2.ORDER BY
+3.GROUP BY
+4.SELECT JOINS
+
+----------------------------------------------------------------
+SOME SCENERIOS
+1.HOW TO SELECT FROM A PARTICULAR PARTITION AND BUCKET
+2.DELETE A PARTICULAR RECORD/s FROM A TABLE,PARTITION,BUCKET
+3.IMPLEMENT UPDATE (OR UPSERTS)
+
+----------------------------------------------------------------
+WITH SPARK
+IMPLEMENT ALL ABOVE THINGS WITH PYSPARK
+
+----------------------------------------------------------------
+You perform the following tasks related to buckets:
+
+Setting hive-site.xml to enable buckets
+SET hive.tez.bucket.pruning=true
+
+Bulk-loading tables that are both partitioned and bucketed:
+When you load data into tables that are both partitioned and bucketed, set the following property to optimize the process:
+
+SET hive.optimize.sort.dynamic.partition=true
+

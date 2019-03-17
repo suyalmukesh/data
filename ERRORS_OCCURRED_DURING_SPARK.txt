@@ -1,0 +1,39 @@
+I am running terasort benchmark with spark on the uni cluster which uses SLURM job management system. It works fine when I use --master local[8], however when I set the master as my current node I get connection refused error.
+
+I run this command to launch the app on local without problem:
+
+> spark-submit \
+    --class com.github.ehiggs.spark.terasort.TeraGen \
+    --master local[8] \
+    target/spark-terasort-1.1-SNAPSHOT-jar-with-dependencies.jar 1g \
+    data/terasort_in
+When I use cluster mode I get the following error:
+
+> spark-submit \
+    --class com.github.ehiggs.spark.terasort.TeraGen \
+    --master spark://iris-055:7077 \ #name of the cluster-node in use
+    --deploy-mode cluster \
+    --executor-memory 20G \
+    --total-executor-cores 24 \
+    target/spark-terasort-1.1-SNAPSHOT-jar-with-dependencies.jar 5g \
+    data/terasort_in
+Output:
+
+WARN  NativeCodeLoader:62 - Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Exception in thread "main" org.apache.spark.SparkException:  Exception thrown in awaitResult: 
+    at
+org.apache.spark.util.ThreadUtils$.awaitResult(ThreadUtils.scala:226) 
+    at 
+.
+.
+./*many lines of timeout logs etc.*/
+.
+.
+.
+Caused by: java.net.ConnectException: Connection refused
+... 11 more
+I expect the command to run smooth and terminate, but I cannot get over this connection error.
+
+
+====================
+

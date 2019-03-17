@@ -1,0 +1,129 @@
+#############################################################################################################################
+##############                               SCD TYPE 1                                                    ##################
+#############################################################################################################################
+
+# HIVE 
+ 
+CREATE TABLE TARGET_TABLE
+(ID INT , NAME STRING , EMAIL STRING , LAST_MOD_DM TIMESTAMP )
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ","
+STORED AS TEXTFILE;
+
+
+CREATE TABLE STAGE_TABLE
+(ID INT , NAME STRING , EMAIL STRING , LAST_MOD_DM TIMESTAMP )
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ","
+STORED AS TEXTFILE;
+
+INSERT INTO STAGE_TABLE VALUES(1,'MUKESH',ABC@GMAIL.COM,TIMESTAMP); 
+TOK_FUNCTION() ERROR 
+INSERT INTO STAGE_TABLE VALUES(1,'MUKESH','ABC@GMAIL.COM',@maxdate);
+INSERT INTO STAGE_TABLE VALUES(2,'ROHIT',R01@GMAIL.COM,TIMESTAMP);
+INSERT INTO STAGE_TABLE VALUES(3,'ANJALI',ANJANI89GMAIL.COM,TIMESTAMP);
+INSERT INTO STAGE_TABLE VALUES(4,'SIMRAN',SHHHH@GMAIL.COM,TIMESTAMP);
+
+
+INSERT INTO STAGE_TABLE SELECT 1,'MUKESH','ABC@GMAIL.COM',current_timestamp();
+INSERT INTO STAGE_TABLE SELECT 2,'HARSHIT','BC@GMAIL.COM',current_timestamp();
+INSERT INTO STAGE_TABLE SELECT 3,'PARU','CCCC@GMAIL.COM',current_timestamp();
+INSERT INTO STAGE_TABLE SELECT 4,'KANNU','DAB@GMAIL.COM',current_timestamp();
+INSERT INTO STAGE_TABLE SELECT 5,'RISHI','XYZ@GMAIL.COM',current_timestamp();
+INSERT INTO STAGE_TABLE SELECT 6,'PUSHKAR','VVF@GMAIL.COM',current_timestamp();
+
+
+================================================================================================
+# INITIALLY TARGET_TABLE WOULD BE EMPTY
+
+DROP TABLE INCREMENTAL_UPDATE_VIEW;
+
+CREATE TABLE INCREMENTAL_UPDATE_VIEW AS   
+SELECT * FROM (  
+      SELECT TI.* FROM             
+                   ( SELECT * FROM TARGET_TABLE
+                     UNION ALL
+                     SELECT * FROM STAGE_TABLE
+                   )TI
+                 JOIN
+                   ( SELECT max(LAST_MOD_DM)MAX_TIME,ID FROM 
+                         (SELECT ID,LAST_MOD_DM FROM TARGET_TABLE
+                           UNION ALL
+                          SELECT ID,LAST_MOD_DM FROM STAGE_TABLE)A GROUP BY ID                    
+                   )S
+                 ON  S.ID = TI.ID AND TI.LAST_MOD_DM = S.MAX_TIME)A
+
+
+DROP TABLE  TARGET_TABLE;
+CREATE TABLE TARGET_TABLE
+(ID INT , NAME STRING , EMAIL STRING , LAST_MOD_DM TIMESTAMP )
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ","
+STORED AS TEXTFILE;
+
+INSERT INTO TARGET_TABLE SELECT * FROM INCREMENTAL_UPDATE_VIEW;
+
+
+# CHECK THE TARGET TABLE
+SELECT * FROM TARGET_TABLE
+
+--------------------------------------------------------------------------------
+                             FIRST RUN 
+-----------------------------------------------------------------------------------------------
+hive> select * from target_table;
+OK
+1	MUKESH	ABC@GMAIL.COM	2019-02-17 23:20:24.281
+2	HARSHIT	BC@GMAIL.COM	2019-02-17 23:22:02.193
+3	PARU	CCCC@GMAIL.COM	2019-02-17 23:22:36.499
+4	KANNU	DAB@GMAIL.COM	2019-02-17 23:23:40.19
+5	RISHI	XYZ@GMAIL.COM	2019-02-17 23:24:17.263
+6	PUSHKAR	VVF@GMAIL.COM	2019-02-17 23:24:56.223
+-------------------------------------------------------------------------------------------------
+                  INSERT NEW/UPDATED  RECORDS TO STAGE TABLE
+------------------------------------------------------------------------------------------------- 
+
+DROP TABLE STAGE_TABLE;
+
+CREATE TABLE STAGE_TABLE
+(ID INT , NAME STRING , EMAIL STRING , LAST_MOD_DM TIMESTAMP )
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ","
+STORED AS TEXTFILE;
+
+INSERT INTO STAGE_TABLE SELECT 1,'MUKESH SUYAL','suyalmukesh@gmail.com',current_timestamp();
+INSERT INTO STAGE_TABLE SELECT 2,'HARSHIT','BC@GMAIL.COM',current_timestamp();
+INSERT INTO STAGE_TABLE SELECT 3,'PARU','paru@GMAIL.COM',current_timestamp();
+INSERT INTO STAGE_TABLE SELECT 4,'KANNU','DAB@GMAIL.COM',current_timestamp();
+INSERT INTO STAGE_TABLE SELECT 5,'RISHI KHANNA ','XYZ@GMAIL.COM',current_timestamp();
+INSERT INTO STAGE_TABLE SELECT 6,'PUSHKAR','VVF@GMAIL.COM',current_timestamp();
+
+INSERT INTO STAGE_TABLE SELECT 7,'MAYA','MAYA@GMAIL.COM',current_timestamp();
+INSERT INTO STAGE_TABLE SELECT 8,'SIMRAN','SIMRAN@GMAIL.COM',current_timestamp();
+INSERT INTO STAGE_TABLE SELECT 9,'PRIYANKA','VVF@GMAIL.COM',current_timestamp();
+INSERT INTO STAGE_TABLE SELECT 10,'POOJA','VVF@GMAIL.COM',current_timestamp();
+
+--------------------------------------------------------------------------------------------------
+                             SECOND  RUN 
+1	MUKESH SUYAL	suyalmukesh@gmail.com	2019-02-18 00:23:25.934
+2	HARSHIT	BC@GMAIL.COM	2019-02-18 00:24:15.241
+3	PARU	paru@GMAIL.COM	2019-02-18 00:24:52.202
+4	KANNU	DAB@GMAIL.COM	2019-02-18 00:25:27.442
+5	RISHI KHANNA 	XYZ@GMAIL.COM	2019-02-18 00:26:03.366
+6	PUSHKAR	VVF@GMAIL.COM	2019-02-18 00:26:38.18
+7	MAYA	MAYA@GMAIL.COM	2019-02-18 00:27:14.237
+8	SIMRAN	SIMRAN@GMAIL.COM	2019-02-18 00:28:15.034
+9	PRIYANKA	VVF@GMAIL.COM	2019-02-18 00:29:18.519
+10	POOJA	VVF@GMAIL.COM	2019-02-18 00:31:11.449
+
+--------------------------------------------------------------------------------------------------
+
+# PREPARE THE INCREMENTAL JOB AND RUN 
+
+
+
+
+
+
+
+ 
+           

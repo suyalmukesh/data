@@ -1,0 +1,16 @@
+What is the difference between DAG and Lineage? Please explain with example
+
+Lineage graph
+As we know, that whenever a series of transformations are performed on an RDD, they are not evaluated immediately,
+but lazily(Lazy Evaluation). When a new RDD has been created from an existing RDD, that new RDD contains a pointer
+to the parent RDD. Similarly, all the dependencies between the RDDs will be logged in a graph, rather than the actual data. 
+This graph is called the lineage graph.
+
+Now coming to DAG,
+
+Directed Acyclic Graph(DAG)
+DAG in Apache Spark is a combination of Vertices as well as Edges. In DAG vertices represent the RDDs and
+ the edges represent the Operation to be applied on RDD. Every edge in DAG is directed from earlier to later
+ in a sequence.When we call an Action, the created DAG is submitted to DAG Scheduler which further splits the graph
+ into the stages of the task.
+

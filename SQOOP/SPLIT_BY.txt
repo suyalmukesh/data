@@ -1,0 +1,34 @@
+All,
+
+ I am working on importing 1.2 billion rows from one of the db2 table, There is composite primary index in the table 
+with at least 5 columns, hence I need to manually specify the --split-by column 
+( since SQOOP does not support multi-part split-by column), I tried to run the Sqoop import with 
+one of the columns from the index which is numeric , and import ran for almost 8 hrs.
+
+I am being suggested to try with different choice for split by key, but now I have question how to choose 
+column for split by 
+
+1) is it supposed to be numeric?  or varchar is fine too?
+
+2) can it have nulls
+
+3)  I suppose distribution of values for the column should be as even as possible, but will it matter 
+how many maps I am choosing (--num-map ## )?
+
+or any other criteria to pay attention to?
+
+--
+
+To answer to your first two questions, don't go by some random columns instead get primary key (obviously not null). 
+so that the data will be distributed evenly
+
+ 
+
+For the 3rd question, yes you can use either --num-map or -m to increase your mapper but don't give some 
+random numbers instead understand how many mappers begin used currently and increase few more extra because 
+if you use very high numbers it may distrub the source DB
+
+ 
+
+Also you can consider other properties like --as-parquetfile (or) --as-avrodatafile ,etc this will help you to compress the data and it 'may' increase the performance 
+

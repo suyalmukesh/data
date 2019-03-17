@@ -1,0 +1,15 @@
+country             	string              	from deserializer   
+languages           	array<string>       	from deserializer   
+religions           	map<string,array<int>>	from deserializer
+
+
+select rel_name,d from (
+select explode(religions) as (rel_name,detail) from json_nested_test )t
+lateral view explode(detail) detailexploded as d;
+
+
+select t.country,t.language,t.rel_name,detailexploded.d from (
+select country,explode(languages) l as language,explode(religions) as (rel_name,detail) from json_nested_test )t lateral view explode(t.detail) detailexploded as d;
+
+
+lateral view explode(languages) lan as language

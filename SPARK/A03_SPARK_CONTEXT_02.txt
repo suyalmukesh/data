@@ -1,0 +1,68 @@
+I am trying to change the default configuration of Spark Session. But it is not working.
+
+spark_session  = SparkSession.builder   \
+                      .master("ip")      \
+                      .enableHiveSupport()  \
+                      .getOrCreate()
+
+spark_session.conf.set("spark.executor.memory", '8g')
+spark_session.conf.set('spark.executor.cores', '3')
+spark_session.conf.set('spark.cores.max', '3')
+spark_session.conf.set("spark.driver.memory",'8g')
+sc = spark_session.sparkContext
+
+But if I put the configuration in Spark submit, then it works fine for me.
+
+spark-submit --master ip --executor-cores=3 --diver 8G sample.py
+
+---------------------------------------------------------------------------------------------
+
+You are not changing the configuration of PySpark. Just open pyspark shell and check the settings:
+
+sc.getConf().getAll()
+
+Now you can execute the code and again check the setting of the Pyspark shell.
+
+You first have to create conf and then you can create the Spark Context using that configuration object.
+
+config = pyspark.SparkConf().setAll([('spark.executor.memory', '8g'), ('spark.executor.cores', '3'), ('spark.cores.max', '3'), ('spark.driver.memory','8g')])
+sc.stop()
+sc = pyspark.SparkContext(conf=config)
+
+Adding to above answer, after updating the configuration, you have to stop the spark session and create a new spark session.
+
+spark.sparkContext.stop()
+spark = SparkSession.builder.config(conf=conf).getOrCreate()
+
+
+This should work
+
+spark = SparkSession.builder.config(conf=conf1).getOrCreate()
+sc = spark.sparkContext
+
+
+You can dynamically load properties. First create a new empty conf and then pass your conf on run-time:
+
+val sc = new SparkContext(new SparkConf())
+spark-submit --master ip --executor-cores=3 --diver 8G sample.py
+
+
+
+
+
+---------------------------------------------------------
+
+While submitting a job we use we give the address of the master as
+
+--master local[a, b, c]
+
+where a, b, & c are integers. What does this integer address?
+
+SparkContext.createTaskScheduler property parses the master parameter
+
+Local: 1 thread.
+local[N]: N threads.
+local[*]: uses threads equal to cores.
+local[N, M]: set the maximal task failures to M.
+
+-------------------------------------------------

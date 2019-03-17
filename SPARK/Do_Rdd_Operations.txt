@@ -1,0 +1,60 @@
+Q1: Convert all words in a rdd to lowercase and split the lines of a document using space.
+
+Q2: Next, I want to remove the words, which are not necessary to analyze this text. 
+We call these words as “stop words”; Stop words do not add much value in a text.
+For example, “is”, “am”, “are” and “the” are few examples of stop words.
+
+Transformation: groupBy
+Q3: After getting the results into rdd3, we want to group the words in rdd3 based on which letters 
+they start with. For example, suppose I want to group each word of rdd3 based on first 3 characters.
+
+Transformation: groupByKey / reduceByKey 
+Q4: What if we want to calculate how many times each word is coming in corpus ?
+
+Transformation: mapPartitions
+Q5: How do I perform a task (say count the words ‘spark’ and ‘apache’ in rdd3) separatly on each
+partition and get the output of the task performed in these partition ?
+
+Math / Statistical Transformation
+Transformation: sample
+Q6: What if I want to work with samples instead of full data ?
+
+
+Transformation: union
+Q 7: What if I want to create a RDD which contains all the elements (a.k.a. union) of two RDDs ?
+
+
+Transformation: join
+Q 8: If we want to join the two pair RDDs based on their key.
+
+
+Transformation: distinct
+Q 9: How to calculate distinct elements in a RDD ?
+
+
+Data Structure / I/O Transformation
+Transformation: coalesce
+Q 10: What if I want to reduce the number of partition of a RDD and get the result in a new RDD?
+
+
+General Actions
+Action: getNumPartitions
+Q 11: How do I find out number of parition in RDD ?
+
+Action: Reduce
+Q 12: If I want to find out the sum the all numbers in a RDD.
+
+
+Mathematical / Statistical Actions
+Action: count
+Q 13: Count the number of elements in RDD.
+
+
+Action: max, min, sum, variance and stdev
+
+
+
+
+
+
+

@@ -1,0 +1,28 @@
+SQOOP - IMPORT WITHOUT PRIMARY KEY
+
+--------------------------------------------------------------------
+
+The Sqoop job fails and the error looks like this" Error during import: No primary key could be found for the table .
+Please specify one with --split-by or perform a sequential import with '-m 1' "
+
+Description: Usually, when you perform a Sqoop job internally it searches for the primary key in the table. If there is
+no primary key the Sqoop job fails and the error looks like this" Error during import: No primary key 
+could be found for the table . Please specify one with --split-by or perform a sequential import with '-m 1' ". 
+The suggestion describes there are two alternative approaches to this scenario.
+
+Best way is option 2
+
+To specify the number of mappers as 1 (default it takes 4). So by specifying the number of mappers to 1, 
+the task will be sequential and identical to a single threaded task. This will succeed only when you are 
+targeting a small table if in case if you are looking for a large import this will fail as the task tends 
+to run forever.
+
+The best approach is to use split-by where you can specify the number of mappers on the bases of indexed columns
+or splitting column manually( with queries 
+
+
+READ :
+https://github.com/beercafeguy/sqoop-commands/wiki/Import-from-and-RDBMS-table-without-primary-key
+
+BULK IMPORT :
+https://community.hortonworks.com/articles/70258/sqoop-performance-tuning.html

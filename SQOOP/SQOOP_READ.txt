@@ -1,0 +1,34 @@
+SQOOP
+-----------
+
+1.IMPORT TABLE WITH OR WITHOUT INCREMENTAL LOAD
+2.BULK LOAD
+3.LOAD WITHOUT PRIMARY KEY
+
+4.EXPORT
+5.CREATE A SQOOP JOB WITH MAPPERS AND REDUCERS
+
+sqoop import --connect "jdbc:mysql://localhost/training" --username cloudera -P --table   
+cloudera -target-dir /user/country_imported  -m 1
+Type above command in a single line.
+
+Here -m 1 specifies one mapper for each table. All the tables are downloaded indefault directory.The default number of mappers used is 4. You can change this by appending the command by "-m number_of_mappers".
+
+Let's list all databases present on a mysql server using a "list-databases" tool.
+$ sqoop list-databases --connect "jdbc:mysql://localhost" --username cloudera --password cloudera  
+
+Similarly for listing tables
+$ sqoop list-tables --connect "jdbc:mysql://localhost/training" --username cloudera -P  
+
+
+
+Till now data was moved between RDBMS to HDFS. This imported data may further be required code analysed using hive or hbase.
+
+Sqoop offers property to directly import data to Hive / Hbase.
+
+Just add "--import-hive" at the end of the command.
+
+Example:
+
+sqoop import \ --connect "jdbc:mysql://localhost/training" \ --username training -P \ --table cityByCountry \ --target-dir /user/where_clause \ --where "state = 'Alaska'" \--import -hive  -m 1
+

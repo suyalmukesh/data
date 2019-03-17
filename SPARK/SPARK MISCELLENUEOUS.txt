@@ -1,0 +1,39 @@
+MISCELLENUEOUS QUESTIONS AND TECHNIQUES :
+
+=======================================================================
+
+1. HOW TO CHOOSE NUMBER OF EXECUTORS AND MEMORY ?  https://www.youtube.com/watch?v=V9E-bWarMNw
+
+       EXECUTOR - JVM PROCESSES   
+       EXECUTOR CORE - IS THE THREAD WHICH IS PART OF THE EXECUTOR          
+       EXECUTOR MEMORY - 
+
+       Number of cores = Concurrent tasks as executor can run 
+       So we might think, more concurrent tasks for each executor will give better performance. But research shows that
+       any application with more than 5 concurrent tasks, would lead to bad show. So stick this to 5.
+       This number came from the ability of executor and not from how many cores a system has. So the number 5 stays same       even if you have double(32) cores in the CPU.?
+ 
+                       https://stackoverflow.com/questions/37871194/how-to-tune-spark-executor-number-cores-and-executor-memory
+       <Best>          https://spoddutur.github.io/spark-notes/distribution_of_executors_cores_and_memory_for_spark_application.html
+       <Cloudera>      https://community.hortonworks.com/questions/166854/how-to-pick-number-of-executors-cores-for-each-exe.html 
+       <YouTube>       EXECUTOR AND EXECUTOR CORE   https://www.youtube.com/watch?v=g7dnZVNtAAc 
+                  
+2. CATALYST OPTIMIZER  
+
+       <YouTube>       https://www.youtube.com/watch?v=iCWAVLkGxdM
+
+3. EXPLAIN WITH EXAMPLE -  COEALESCE AND REPARTITIONIONG
+
+4. SPARK SQL DATA TYPES  (https://www.youtube.com/watch?v=5x0fk0CFEKk)
+
+5. Apache Spark - Deep Dive into Storage Format's ( https://github.com/spoddutur/spark-notes/blob/master/deep_dive_into_storage_formats.md )
+
+6. SPARK SQL METADATA     ( )
+7. SPAREK SQL FUNCTIONS AND UDFs  ()    - WITH EXAMPLE
+8. BUCKETING IN SPARK    - WITH EXAMPLE
+https://jaceklaskowski.gitbooks.io/mastering-spark-sql/spark-sql-bucketing.html
+
+9. ACCUMULATORS    - WITH EXAMPLE
+10.BROADCASTING    - WITH EXAMPLE 
+
+11.WHAT DO WE MEAN BY RUNNING AN APPLICATION ON yarn cluster or yarn-client mode:

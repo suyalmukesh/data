@@ -1,0 +1,85 @@
+json_data.json
+-------------------------------------------------------------
+{
+  "customer" : {
+    "given_name" : "Anuvrat",
+    "surname" : "Singh"
+  }, 
+  "order" : {
+    "id" : "123dfe523gd"
+  }
+}
+
+-----------------------------------------------------------------
+
+create table order_raw(
+  customer map<string, string>,
+  order map<string, string>
+) row format serde 'org.openx.data.jsonserde.JsonSerDe';
+location '<location-to-file>';
+
+------------------------------------------------------------------
+
+select customer['given_name'], customer['surname'], order['id']
+from order_raw;
+
+-------------------------------------------------------------------
+
+file2.json
+
+--------------
+
+{
+    "customerId":"0277ZGAX80PG6ZSJ04J5",
+    "age":23,
+    "services":[ {
+        "trips":[ {
+            "tripId":"A12-5678344-4097746",
+            "fare":24.0,
+            "distanceTravelled":3.2,
+            "referrals":{
+                "email_campaign":{
+                    "campaignA":{
+                        "referralIds":["0ZK7V4HM5ZZNKJ0PRRR5"]
+                    }
+                }
+            }
+        } ]
+  } ]
+}
+
+
+create table cust_trips (
+    customerId  string,
+    age int,
+    services array<struct<
+        trips:array<struct<
+            tripId:string,
+            fare:double,
+            distanceTravelled:double,
+            referrals:struct<
+                email_campaign:map<string, struct<referralIds:array<string>>>
+            >
+        >>
+    >>
+) row format serde 'org.openx.data.jsonserde.JsonSerDe'
+location '<location-of-files>';
+
+
+
+select  
+    campName, 
+    refIdArr.referralIds[0], 
+    count(distinct customerId)
+from cust_trips ct
+    lateral view explode(ct.services) v1 as s
+    lateral view explode(s.trips) v2 as t
+    lateral view explode(t.referrals.email_campaign) v2 as campName, refIdArr
+group by 
+    campName,
+    refIdArr.referralIds[0];
+
+
+
+
+

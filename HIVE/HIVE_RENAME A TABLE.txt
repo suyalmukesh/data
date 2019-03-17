@@ -1,0 +1,14 @@
+Yeah we can do that. You just need to follow below three commands in sequence.
+
+Lets say you have a external table test_1 in hive. And you want to rename it test_2 which should point test_2 location not test_1. Then you need to convert this table into Managed table using below command. test_1 -> pointing to test_1 location
+
+ALTER TABLE db_name.test_1 SET TBLPROPERTIES('EXTERNAL'='FALSE');
+
+
+Rename the table name.
+ALTER TABLE db_name.test_1 RENAME TO db_name.test_2;
+
+
+Again convert the managed table after renaming to external table.
+ALTER TABLE db_name.test_2 SET TBLPROPERTIES('EXTERNAL'='TRUE');
+db_name.test_2 table will point the test_2 location. If we do it without making the managed table it will point the test_1 location

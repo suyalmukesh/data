@@ -1,0 +1,66 @@
+DO THESE OPERATIONS ON AN RDD
+
+=========================================================================================================
+
+Q1: Convert all words in a rdd to lowercase and split the lines of a document using space.
+
+     rdd1 = rdd.map(lambda x:x.lower()).map(lambda x:x.split(',')
+
+Q2: Next, I want to remove the words, which are not necessary to analyze this text. 
+    We call these words as “stop words”; Stop words do not add much value in a text.
+    For example, “is”, “am”, “are” and “the” are few examples of stop words.
+    
+    stop_words = ['is','am','are','the']
+    rdd2 = rdd1.flatMap(lambda x:x.split())
+    rdd3 = rdd2.filter(lambda x: x not in stop_words)
+    
+    rdd3.take(5)
+    
+
+Q3: After getting the results into rdd3, we want to group the words in rdd3 based on which letters
+    they start with. For example, suppose I want to group each word of rdd3 based on first 3 characters.
+
+    rdd4 = rdd3.groupBy(lambda x:x[0])
+    print([(k,list(v)) for (k,v) in rdd4.collect()])
+
+Q4: What if we want to calculate how many times each word is coming in corpus ?
+
+    map_rdd5 = rdd4.map(lambda x:(x,1))
+
+    grouped_rdd = map_rdd5.groupByKey()
+
+
+
+Q5: How do I perform a task (say count the words ‘spark’ and ‘apache’ in rdd3) separatly on each partition
+ and get the output of the task performed in these partition ?
+
+Q6: What if I want to work with samples instead of full data ?
+
+Q 7: What if I want to create a RDD which contains all the elements (a.k.a. union) of two RDDs ?
+
+Q 8: If we want to join the two pair RDDs based on their key.
+
+Q 9: How to calculate distinct elements in a RDD ?
+
+Q 10: What if I want to reduce the number of partition of a RDD and get the result in a new RDD?
+
+Q 11: How do I find out number of parition in RDD ?
+
+Q 12: If I want to find out the sum the all numbers in a RDD.
+
+Q 13: Count the number of elements in RDD.
+
+Action: max, min, sum, variance and stdev
+    To take the maximum, minimum, sum, variance and standard deviation of a RDD, we can apply “max”,
+    “min”, “sum”, “variance” and “stdev” actions. Let’s take the maximum, minimum, sum, 
+    variance and standard deviation of “num_rdd”
+
+Q14: Convert an RDD into Row ( or Schema RDD )
+
+Q15: Extract Top nth Row from an RDD
+
+Q16: Find Top nth salary from an RDD
+
+Q17: Find nth row from bottom in an RDD
+
+   

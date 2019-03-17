@@ -1,0 +1,15 @@
+JOINS IN SPARK
+========================================================================================
+      <1> shuffle hash join  ( earlier it was the default join )
+      <2> sort merge join    ( 2.3 Now this is the default join which spark uses )
+      <3> broadcast join     ( One small table (say less then 500MB one large)
+                             ( spark.sql.autoBroadcastJoinThreshold)
+                               spark.conf.get("spark.sql.autoBroadcastJoinThreshold").toInt
+                               q.explain
+                               also called Map Side Join , Replicated Join 
+                               spark.conf.get("spark.sql.autoBroadcastJoinThreshold",-1 ) 
+                           # now spark will not use Broadcast join for any joins 
+           <YouTube>           https://www.youtube.com/watch?v=HdGeRkBm6m4
+       <4> bucketed join
+
+==========================================================================================

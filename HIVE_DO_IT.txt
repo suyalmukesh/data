@@ -1,0 +1,214 @@
+Theoretical questions like:
+
+What is a metastore in Hive?
+Metastore is the central repository of Apache Hive metadata. It stores metadata for Hive tables (like their schema and location) and partitions in a relational database. ... A service that provides metastore access to other Apache Hive services. Disk storage for the Hive metadata which is separate from HDFS storage
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+What is the difference between local and remote metastore?
+Metastore deployment modes:
+
+There are three mode for metastore deployment in Hive Metastore.
+
+– Local Mode:
+Basically, as the main HiveServer process, the Hive metastore service runs in the same process, but make sure Hive metastore database runs in a separate process, as well as it can be on a separate host, in Local mode.
+
+– Remote Mode:
+
+Whereas, the Hive metastore service runs in its own JVM process. Some processes(HiveServer2, HCatalog, Cloudera Impala™,) communicate with it with the help of the Thrift network API, in Remote mode.
+
+In comparison with the Local mode, there is one benefit of using the Remote mode, that is Remote mode does not need the administrator to share JDBC login information for the metastore database along with each Hive user, but local mode does.
+
+-----------------------------------------------------------------------------------------------------
+What is the default database provided by Apache Hive for metastore?
+
+All Hive implementations need a metastore service, where it stores metadata. It is implemented using tables in a relational database. By default, Hive uses a built-in Derby SQL server. It provides single process storage, so when we use Derby, we cannot run instances of Hive CLI.
+
+---------------------------------------------------------------------------------
+What is the difference between external table and managed table?
+What is a partition in Hive?
+Why do we perform partitioning in Hive?
+What is dynamic partitioning and when is it used?
+--------------------------------------------------------------------------------------
+21. What will happen in case you have not issued the command:  ‘SET hive.enforce.bucketing=true;’ before bucketing a table in Hive in Apache Hive 0.x or 1.x?
+The command:  ‘SET hive.enforce.bucketing=true;’ allows one to have the correct number of reducer while using ‘CLUSTER BY’ clause for bucketing a column. In case it’s not done, one may find the number of files that will be generated in the table directory to be not equal to the number of buckets. As an alternative, one may also set the number of reducer equal to the number of buckets by using set mapred.reduce.task = num_bucket.
+
+---------------------------------------------------------------------------------------------------
+
+Scenario based questions like:
+
+Suppose I have installed Apache Hive on top of my Hadoop cluster using default metastore configuration. 
+Then, what will happen if we have multiple clients trying to access Hive at the same time?
+
+Suppose, I create a table that contains details of all the transactions done by the customers of year 2016: 
+CREATE TABLE transaction_details (cust_id INT, amount FLOAT, month STRING, country STRING) 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ‘,’ ;
+Now, after inserting 50,000 tuples in this table, I want to know the total revenue generated for each month. But, Hive is taking too much time in processing this query. How will you solve this problem and list the steps that I will be taking in order to do so?
+
+
+I am inserting data into a table based on partitions dynamically. But, I received an error – FAILED ERROR IN SEMANTIC ANALYSIS: Dynamic partition strict mode requires at least one static partition column. How will you remove this error?
+Suppose, I have a lot of small CSV files present in /input directory in HDFS and I want to create a single Hive table corresponding to these files. The data in these files are in the format: {id, name, e-mail, country}. Now, as we know, Hadoop performance degrades when we use lots of small files.
+So, how will you solve this problem where we want to create a single Hive table for lots of small files without degrading the performance of the system?
+ou can also go through this Hadoop interview questions video which also covers Hive interview questions and will give you a good scenario of an interview.
+
+Can you list few commonly used Hive services?
+
+Command Line Interface (cli)
+Hive Web Interface (hwi)
+HiveServer (hiveserver)
+Printing the contents of an RC file using the tool rcfilecat.
+Jar
+Metastore
+
+
+2. What is the use of explode in Hive?
+
+Explode in Hive is used to convert complex data types into desired table formats. explode UDTF basically emits all the elements in an array into multiple rows.
+
+
+3. What is a Hive variable? What for we use it?
+
+The hive variable is variable created in the Hive environment that can be referenced by Hive scripts. It is used to pass some values to the hive 
+queries when the query starts executing.
+
+
+4. What is the precedence order of HIVE configuration?
+
+We are using a precedence hierarchy for setting the properties
+
+SET Command in HIVE
+The command line –hiveconf option
+Hive-site.XML
+Hive-default.xml
+Hadoop-site.xml
+Hadoop-default.xml
+
+
+5. Mention the date data type in Hive. Name the Hive data type collection.
+
+The TIMESTAMP data type stores date in java.sql.timestamp format.
+
+Three collection data types in Hive
+
+ARRAY
+MAP
+STRUCT
+
+-----------------------------------------------------------------------------------------------------------------------
+
+List of below questions may help you to know interview questions on Hive.
+
+What are the different types of tables available in HIve?
+Is Hive suitable to be used for OLTP systems? Why?
+Can a table be renamed in Hive?
+Can we change the data type of a column in a hive table?
+what are the different modes of Hive?
+What is a metastore in Hive?
+What is the need for custom Serde?
+Waht are the key components of Hive Architecture?
+Why do we need Hive?
+What is the default location where hive stores table data?
+What are the three different modes in which hive can be run?
+What is a Table generating Function on hive?
+How can Hive avoid mapreduce?
+What is the difference between LIKE and RLIKE operators in Hive?
+Is it possible to create a Cartesian join between 2 tables, using Hive?
+Is there a date data type in Hive?
+What are collection data types in Hive?
+Can we run UNIX shell commands from the hive? Give example.
+What is a Hive variable? What for we use it?
+
+Practice is one of the best ways to prepare for a job interview. A practice interview with a professional is one way to learn and practice interviewing skills. Practicing your interview will help reduce stress during your actual interview, and will allow you to focus on connecting with your interviewer rather than struggling to come up with answers.
+
+
+For Apache Hive, I ask a few questions about the architecture. For eg:
+
+What executes the hive query?
+
+How does the hive driver communicate with the HDFS namenode?
+
+What is thrift server.
+
+How does using hive help you .
+
+What is meant by the hive metastore and how do you change it from derby.
+
+But these are limited. Mostly I ask about queries, which are similar to SQL interview questions. Few of my favourite ones:
+
+How do you implement updates and delete in a hive application, since it doesn’t support them (not until hive 14)
+NOT EXISTS is not supported . What is the workaround.
+More of join related questions.
+You may be asked about hive-config.xml as well.
+
+ 
+1) Explain what is Hive?
+
+Hive is an ETL and Data warehousing tool developed on top of Hadoop Distributed File System (HDFS). It is a data warehouse framework for querying and analysis of data that is stored in HDFS. Hive is an open-source-software that lets programmers analyze large data sets on Hadoop.
+
+
+2) When to use Hive?
+
+Hive is useful when making data warehouse applications
+When you are dealing with static data instead of dynamic data
+When application is on high latency (high response time)
+When a large data set is maintained
+When we are using queries instead of scripting
+
+
+3) Mention what are the different modes of Hive?
+
+Depending on the size of data nodes in Hadoop, Hive can operate in two modes.
+
+These modes are,
+
+Local mode
+Map reduce mode
+
+
+4) Mention when to use Map reduce mode?
+
+Map reduce mode is used when,
+
+It will perform on large amount of data sets and query going to execute in a parallel way
+Hadoop has multiple data nodes, and data is distributed across different node we use Hive in this mode
+Processing large data sets with better performance needs to be achieved
+
+
+5) Mention key components of Hive Architecture?
+
+Key components of Hive Architecture includes,
+
+User Interface
+Compiler
+Metastore
+Driver
+Execute Engine
+ecommendedAll
+Mukesh Suyal
+
+Forget any tool, any technical  interview is meant to judge if you can fit into the existing  technical architecture. So, Here is how the list goes, reinforce your basics. Read as much theory as you can. Read as many blogs as you can.
+
+Moving forward practice some example based on that. All these things should be covered in 10 days. Move forward to see the interaction db and the network fetch.  Read about the queues and blocks and you are good to go.
+
+I found this link on google that might be helpful.
+
+Hive Interview Questions
+
+Practice some ds. algo questions and you are good to go.
+
+What is Apache Hive?
+
+How Facebook Uses Hadoop, Hive and HBase?
+
+What is the difference between HBase and Hive?
+
+What is Hive Metastore?
+
+Hive new version supported Hadoop Versions?
+
+Which companies are mostly using Hive?
+
+Wherever (Different Directory) I run hive query, it creates new metastore_db, please explain the reason for it?
+
+What is the usage of Query Processor in Apache Hive?
+

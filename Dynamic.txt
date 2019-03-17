@@ -1,0 +1,33 @@
+set hive.exec.dynamic.partition=true;
+set hive.exec.dynamic.partition.mode=nonstrict;
+set hive.exec.max.dynamic.partitions=100000000;
+set hive.exec.max.dynamic.partitions.pernode=100000000;
+set hive.exec.max.created.files = 100000000;
+
+
+
+You can add partitions to existing table using ALTER TABLE <table_name> ADD PARTITION (date=' ') LOCATION '/path'
+
+2. For dynamic partitioning:
+
+--Set following two properties for your Hive session:
+
+SET hive.exec.dynamic.partition=true; SET hive.exec.dynamic.partition.mode=nonstrict;
+
+--Create your staging table without Partition
+
+create external table table_name (col_01,col_02) row format delimited fields terminated by ",";
+
+--load data to your Hive Table:
+
+load data local inpath '/path' into table table_name;
+
+--Create production table with the columns you want to partition upon. In this case you want to partition upon date column:
+
+create external table table_name (col_01,col_02) partitioned by (date_part string) row format delimited fields terminated by ',';
+
+insert overwrite table table_name partition(date_part) select col_01,col_02 from staging_table;
+
+--Verify data is correctly populated in partition:
+
+hive> select * from table_name where date_part="20170111";

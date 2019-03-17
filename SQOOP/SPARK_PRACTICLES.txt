@@ -1,0 +1,11 @@
+SPARK--
+-----------------------------------------------------------------------------
+1.
+A TABLE FORMAT ..
+READ A TEXT FILE AND CREATE A DATAFARAME  WITH INFERSCHEMA = 'TRUE' AND 'FALSE'
+
+2.
+WHOLE CODE FOR VARIOUS OPERATIONS
+
+3.
+DML CODES (OR ETL CODES) FOR HIVE etc

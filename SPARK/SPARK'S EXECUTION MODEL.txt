@@ -1,0 +1,28 @@
+SPARK'S EXECUTION MODEL  (  job, stage, and task )
+
+--------------------------------------------------------------
+
+TUNE YOUR SPARK JOBS_1  ( https://blog.cloudera.com/blog/2015/03/how-to-tune-your-apache-spark-jobs-part-1/ )
+TUNE YOUR SPARK JOBS_2  ( https://blog.cloudera.com/blog/2015/03/how-to-tune-your-apache-spark-jobs-part-2/ )
+
+VERY GUD CONCEPTS : READ https://github.com/spoddutur/spark-notes/blob/master/deep_dive_into_storage_formats.md
+
+-------------------------------------------------------------------------------------------
+
+QUESTIONS :
+
+OPTIMIZATION TECHNIQUES IN SPARK (MAKE SOME STEP WISE.. )
+
+CONFIGURING SPARK'S RUNTIME PRPERTIES
+
+        //set new runtime options
+          spark.conf.set("spark.sql.shuffle.partitions", 6)
+          spark.conf.set("spark.executor.memory", "2g")
+        //get all settings
+          val configMap:Map[String, String] = spark.conf.getAll()
+
+ACCESSSING CATALOG METADATA
+
+        //fetch metadata data from the catalog
+          spark.catalog.listDatabases.show(false)
+          spark.catalog.listTables.show(false)

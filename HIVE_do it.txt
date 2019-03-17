@@ -1,0 +1,51 @@
+Test :
+-------
+
+HIVE::
+        DIFFERENT FILE FORMATS
+             sequential,text,json,avro,parquet,orc,csv
+        READ AND WRITE
+             from local load into inpath local <path>
+             ..
+             saveastextfile,saveasparquetfile...etc
+        PARTIONING AND BUCKETING\
+             partitioning static and dynamic
+             for dynamic need to configure some properties
+             set hive.exec.dynamic.partition=true
+                                             non-strict
+         ???????????????/////  need to learn
+
+
+        MAP SIDE JOINS 
+            small table and large table
+           select a,/*mapjoin(b)*/.... syntax
+
+        HOW TO HANDLE JSON
+           using serde....  syntax and example  
+       
+        DIFFERENT TYPES OF JOINS IN HIVE 
+              mapjoin,inner join,outerjoin,bucket join .... right ??
+
+
+        PARTITIONS - STATIC VS DYNAMIC
+        PROPERTIES TO BE SET IN DYNAMIC PARTITIONS
+        PROPERTIES TO BE SET IN TRNASACTIONAL TABLE
+                transactional-true
+        HIVE UDF
+        PROPERTIES TO BE SET FOR REGISTERING HIVE UDF
+        HIVE QUERY TO RETRIVE DATA FROM A PARTICULAR PARTITION
+        HIVE QUERY TO RETRIVE DATA FROM A PARTICULAR BUCKET ( POSSIBLE OR NOT )
+        SOME COMPLEX HIVE QUERIES
+        HIVE INDEXES
+        SUPPOSE YOU DEFINED A HIVE TABLE TO READ FROM A FILE SAY 5 COLS , WHAT HAPPEN IF THE INPUT FILE HAS 6 COLS
+        HIVE -  HOW TO READ FROM RDBMS TABLE ( IS IT POSSIBLE )
+        HIVE -  HOW TO WRITE TO RDBMS TABLE ( IS IT POSSIBLE )
+        WRITE EXTERNAL HIVE TABLES TO AZURE DATA LAKE
+        IMPLEMENT SCD IN HIVE
+        IMPLEMENT UPSERT IN HIVE 
+        TRANSACTIONAL TABLE IN HIVE
+        A COMPLETE HIVE TABLE CREATION WITH ALL OPTIONS
+        ALTER TABLE
+        DELETE PARTITION
+        DELETE PARTICULAR BUCKET
+        EMBED HIVE IN PYTHON CODE

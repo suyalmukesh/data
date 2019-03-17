@@ -1,0 +1,27 @@
+set hive.exec.dynamic.partition=true
+set hive.exec.dynamic.partition.mode=nonstrict
+set hive.exec.max.dynamic.partition=10
+set hive.exec.max.dynamic.partition.pernode=10
+set hive.enforce.bucketing = true
+
+
+CREATE TABLE IF NOT EXISTS data ( id int, name String,age int)
+partitioned by (year_id int)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ‘\t’
+LINES TERMINATED BY ‘\n’
+STORED AS TEXTFILE;
+
+
+CREATE TABLE DATA(ID INT,NAME STRING,AGE INT)
+PARTITIONED BY (YEAR_ID STRING)
+STORED AS PARQUET;
+
+create table diamond_report (carat string,string,color string,clarity string,depth string,table string, \
+                           price string,colx string, \
+                           coly string,colz string)  \
+                           partitioned by (cut string)  \
+                           stored as parquet"
+
+
+CREATE TABLE DIAMOND_REPORT(CARAT STRING,

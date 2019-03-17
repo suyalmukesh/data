@@ -1,0 +1,27 @@
+create table employee(id bigint,name string,age int,salary bigint,department string);
+
+
+create table employee(id bigint,name string,age int,salary bigint) partitioned by department;
+
+
+insert into table employee values (1,'aarti',28,55000,'HR');
+insert into table employee values (2,'sakshi',22,60000,'HR');
+insert into table employee values (3,'mahesh',25,25000,'HR');
+
+insert into table employee values (10001,'rajesh',29,50000,'BIGDATA');
+insert into table employee values (10002,'rahul',23,250000,'BIGDATA');
+insert into table employee values (10003,'dinesh',35,7000,'BIGDATA');
+
+
+insert into employee values(1,'aarti',28,55000) where department = 'HR';
+
+
+INSERT INTO TABLE employee PARTITION(department = 'HR') VALUES (1,'aarti',28,55000,'HR');
+
+INSERT INTO TABLE employee PARTITION(department = 'HR') VALUES (1,'aarti',28,55000);
+INSERT INTO TABLE employee PARTITION(department = 'HR') VALUES (2,'sakshi',22,60000);
+INSERT INTO TABLE employee PARTITION(department = 'HR') VALUES (3,'mahesh',25,25000);
+
+INSERT INTO TABLE employee PARTITION(department = 'BIGDATA') VALUES (10001,'rajesh',29,50000);
+INSERT INTO TABLE employee PARTITION(department = 'BIGDATA') VALUES (10002,'rahul',23,250000);
+INSERT INTO TABLE employee PARTITION(department = 'BIGDATA') VALUES (10003,'dinesh',35,7000);

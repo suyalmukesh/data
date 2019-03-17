@@ -1,0 +1,49 @@
+SPARK SESSION
+
+    spark = SparkSession
+           .builder()
+           .appName("SparkSessionZipsExample")
+           .config("spark.sql.warehouse.dir", warehouseLocation)
+           .enableHiveSupport()
+           .getOrCreate()
+---------------------------------------------------------------------------------------------------------------------------------
+            ::: LAYOUT DIFFERENCE BETWEEN SPARK CONTEXT AND SPARK SESSION
+
+SPARK CONTEXT:
+Prior to Spark 2.0.0 sparkContext was used as a channel to access all spark functionality.
+The spark driver program uses spark context to connect to the cluster through a resource manager (YARN or Mesos..).
+sparkConf is required to create the spark context object, which stores configuration parameter like appName (to identify your spark driver), application, number of core and memory size of executor running on worker node.
+
+In order to use APIs of SQL, HIVE, and Streaming, separate contexts need to be created but now sparksession handles everything.
+
+Example :
+conf = new SparkConf().setAppName(“RetailDataAnalysis”).setMaster(“spark://master:7077”).set(“spark.executor.memory”, “2g”)
+
+creation of sparkContext:
+sc = new SparkContext(conf)
+
+
+SPARK SESSION:
+SPARK 2.0.0 onwards, SparkSession provides a single point of entry to interact with underlying Spark functionality and
+allows programming Spark with DataFrame and Dataset APIs. All the functionality available with sparkContext
+are also available in sparkSession.
+
+In order to use APIs of SQL, HIVE, and Streaming, no need to create separate contexts as sparkSession includes all the APIs.
+
+Once the SparkSession is instantiated, we can configure Spark’s run-time config properties.
+
+Example:
+
+Creating Spark session:
+spark = SparkSession
+        .builder
+        .appName(“WorldBankIndex”)
+        .getOrCreate()
+
+Configuring properties:
+spark.conf.set(“spark.sql.shuffle.partitions”, 6)
+spark.conf.set(“spark.executor.memory”, “2g”)
+
+Spark 2.0.0 onwards, it is better to use sparkSession as it provides access to all the spark Functionalities that 
+sparkContext does. Also, it provides APIs to work on DataFrames and Datasets.
+

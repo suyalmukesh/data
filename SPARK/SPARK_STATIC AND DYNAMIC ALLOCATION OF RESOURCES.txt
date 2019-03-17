@@ -1,0 +1,38 @@
+There are two ways in which we configure the executor and core details to the Spark job. They are:
+
+Static Allocation – The values are given as part of spark-submit
+
+Here , we calculate the Executor-cores,No of Executors and Executor memory and give in Spark-submit or while creatting spark configuration.
+
+------------------------------------------
+
+Dynamic Allocation – The values are picked up based on the requirement (size of data, amount of computations needed) and released after use. 
+This helps the resources to be re-used for other applications.
+
+To understand dynamic allocation, we need to have knowledge of the following properties:
+
+spark.dynamicAllocation.enabled – when this is set to true we need not mention executors. The reason is below:
+
+The static parameter numbers we give at spark-submit is for the entire job duration. However if dynamic allocation comes into picture, there would be different stages like the following:
+
+1. What is the number for executors to start with:
+
+   Initial number of executors (spark.dynamicAllocation.initialExecutors) to start with
+
+
+2. Controlling the number of executors dynamically:
+
+   Then based on load (tasks pending) how many executors to request. This would eventually be the number what we give at spark-submit in static way. 
+   So once the initial executor numbers are set, we go to min (spark.dynamicAllocation.minExecutors) and 
+   max (spark.dynamicAllocation.maxExecutors) numbers.
+
+3. When to ask new executors or give away current executors:
+
+   When do we request new executors (spark.dynamicAllocation.schedulerBacklogTimeout) – This means that there have been pending tasks for this much    duration. So the request for the number of executors requested in each round increases exponentially from the previous round. 
+   For instance, an application will add 1 executor in the first round, and then 2, 4, 8 and so on executors in the subsequent rounds.
+   At a specific point, the above property max comes into picture.
+
+   When do we give away an executor is set using spark.dynamicAllocation.executorIdleTimeout.
+
+   To conclude, if we need more control over the job execution time, monitor the job for unexpected data volume the static numbers would help. 
+   By moving to dynamic, the resources would be used at the background and the jobs involving unexpected volumes might affect other applications.

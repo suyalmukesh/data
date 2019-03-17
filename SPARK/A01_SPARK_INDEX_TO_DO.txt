@@ -1,0 +1,105 @@
+BASIC ::
+               WHY SPARK
+               SPARK ARCHITECTURE  https://www.youtube.com/watch?v=jffQhcweGwY
+               ADVANTAGES OVER HADOOP MAP REDUCE
+               CONS OF SPARK
+NEXT LEVEL ::
+               SPARK CONTEXT 
+               SPARK SESSION
+               TRANSFORMATIONS AND ACTIONS
+               RDD - A GOOD NOTE ON IT
+               OPERATIONS SPECIFIC TO RDD
+               JOIN TWO RDDs
+               COMMON TRANSFORMATIONS
+               SHUFFLE OPERATIONS
+               OPTIMIZATION TECHNIQUES IN SPARK
+SPARK SQL::
+               DATAFRAME
+               https://www.youtube.com/watch?v=1IoMlAMOPzM
+               CATALOG INTERFACE (spark.Catalog.listTables.show)
+                                  spark.Catalog.listTables("global_temp").show   
+               DIFFERENCE DATAFRAME DATASET RDD
+               ALL OPERATIONS IN DATAFRAME
+               SCHEMAS ON READ
+               CREATE SCHEMA AND THEN READ
+               DATAFRAME QL
+
+SPARK CONVERSIONS ::
+               RDD --> DATAFRAME (WHAT'S THE NEED )
+        
+MISCELLENEOUS ::
+               COEALESCE AND REPARTITIONIONG
+               JOINS IN SPARK
+                          shuffle hash join  ( earlier it was the default join )
+                          sort merge join    ( 2.3 Now this is the default join which spark uses )
+                          broadcast join     ( One small table (say less then 500MB one large)
+                                             (spark.sql.autoBroadcastJoinThreshold)
+                                              spark.conf.get("spark.sql.autoBroadcastJoinThreshold").toInt
+                                              q.explain
+                                              also called Map Side Join , Replicated Join 
+                                              spark.conf.get("spark.sql.autoBroadcastJoinThreshold",-1 ) 
+                                              # now spark will not use Broadcast join for any joins 
+                                              https://www.youtube.com/watch?v=HdGeRkBm6m4
+                          bucketed join
+               SPARK SQL DATA TYPES  (https://www.youtube.com/watch?v=5x0fk0CFEKk)
+               SPARK SQL METADATA     ( )
+               SPAREK SQL FUNCTIONS AND UDFs  ()   
+               BUCKETING IN SPARK
+               ACCUMULATORS 
+               BROADCASTING
+SPARK AND HIVE ::
+               RDD -> HIVE TABLE
+               SPARK-HIVE QL
+SPARK-SUBMIT ::
+               VARIOUS OPTIONS HERE ... BE CLEAR
+               HOW TO DECIDE NUMBER OF EXECUTER , CORES , NODES , DATA NOTES ,
+               MASTER NODE , WORKERS NODES ? -- V    
+               WHAT HAPPENS WHEN YOU SUBMIT A SPARK JOB
+               COMPLEX OPERATIONS YOU HAVE DONE IN SPARK
+
+
+-----------------------------------------------------------------------------------------
+HIVE::
+        DIFFERENT FILE FORMATS
+        READ AND WRITE
+        PARTIONING AND BUCKETING\
+        MAP SIDE JOINS 
+        HOW TO HANDLE JSON
+        DIFFERENT TYPES OF JOINS IN HIVE 
+        PARTITIONS - STATIC VS DYNAMIC
+        PROPERTIES TO BE SET IN DYNAMIC PARTITIONS
+        PROPERTIES TO BE SET IN TRNASACTIONAL TABLE
+        HIVE UDF
+        PROPERTIES TO BE SET FOR REGISTERING HIVE UDF
+        HIVE QUERY TO RETRIVE DATA FROM A PARTICULAR PARTITION
+        HIVE QUERY TO RETRIVE DATA FROM A PARTICULAR BUCKET ( POSSIBLE OR NOT )
+        SOME COMPLEX HIVE QUERIES
+        HIVE INDEXES
+        SUPPOSE YOU DEFINED A HIVE TABLE TO READ FROM A FILE SAY 5 COLS , WHAT HAPPEN IF THE INPUT FILE HAS 6 COLS
+        HIVE -  HOW TO READ FROM RDBMS TABLE ( IS IT POSSIBLE )
+        HIVE -  HOW TO WRITE TO RDBMS TABLE ( IS IT POSSIBLE )
+        WRITE EXTERNAL HIVE TABLES TO AZURE DATA LAKE
+        IMPLEMENT SCD IN HIVE
+        IMPLEMENT UPSERT IN HIVE 
+        TRANSACTIONAL TABLE IN HIVE
+        A COMPLETE HIVE TABLE CREATION WITH ALL OPTIONS
+        ALTER TABLE
+        DELETE PARTITION
+        DELETE PARTICULAR BUCKET
+        EMBED HIVE IN PYTHON CODE
+       
+SQOOP ::
+        IMPORT FROM RDBMS
+        EXPORT TO RDBMS
+        WHAT IF WE DON'T HAVE PRIMARY KEY
+        SPLIT BY
+        INCREMENTAL LOAD
+
+ 
+        
+
+
+
+
+
+

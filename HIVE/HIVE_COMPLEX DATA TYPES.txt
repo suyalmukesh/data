@@ -1,0 +1,7 @@
+struct<>
+map<>
+array<>
+union<>
+
+
+we use explode and lateral view to read the values in each row

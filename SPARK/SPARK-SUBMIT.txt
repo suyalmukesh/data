@@ -1,0 +1,70 @@
+SPARK-SUBMIT ::
+
+There are two ways in which we configure the executor and core details to the Spark job. They are:
+
+Static Allocation – The values are given as part of spark-submit
+Dynamic Allocation – The values are picked up based on the requirement (size of data, amount of computations needed) and 
+released after use. This helps the resources to be re-used for other applications.
+
+=========================================================================================================
+
+     spark-submit --class <CLASS_NAME> --num-executors ? --executor-cores ? --executor-memory ? ....
+     VARIOUS OPTIONS HERE ... BE CLEAR
+     HOW TO DECIDE NUMBER OF EXECUTER , CORES , NODES , DATA NOTES ,
+     MASTER NODE , WORKERS NODES ? -- V    
+     WHAT HAPPENS WHEN YOU SUBMIT A SPARK JOB
+     COMPLEX OPERATIONS YOU HAVE DONE IN SPARK
+   
+     spark-submit   \
+         --class <CLASS_NAME>   \
+         --num-executors ?      \
+         --executor-cores ?     \
+         --executor-memory ? ....
+
+========================================================================================================
+//// WRITE THE EXAMPLES FROM THE NOTEBOOK
+
+========================================================================================================
+
+How to run spark in Standalone client mode?
+
+spark-submit \
+class org.apache.spark.examples.SparkPi \
+deploy-mode client \
+master spark//$SPARK_MASTER_IP:$SPARK_MASTER_PORT \
+$SPARK_HOME/examples/lib/spark-examples_version.jar 10
+
+----
+How to run spark in Standalone cluster mode?
+
+spark-submit \
+class org.apache.spark.examples.SparkPi \
+deploy-mode cluster \
+master spark//$SPARK_MASTER_IP:$SPARK_MASTER_PORT \
+$SPARK_HOME/examples/lib/spark-examples_version.jar 10
+
+-----
+How to run spark in YARN client mode?
+
+spark-submit \
+class org.apache.spark.examples.SparkPi \
+deploy-mode client \
+master yarn \
+$SPARK_HOME/examples/lib/spark-examples_version.jar 10
+
+----
+How to run spark in YARN cluster mode?
+
+spark-submit \
+class org.apache.spark.examples.SparkPi \
+deploy-mode cluster \
+master yarn \
+$SPARK_HOME/examples/lib/spark-examples_version.jar 10
+
+----
+
+spark-submit "wasb:///data/sparkhive.py" \
+deploy-mode cluster \
+--num-executors 3      \
+--executor-cores 2     \
+--executor-memory 2g

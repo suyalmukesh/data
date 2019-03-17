@@ -1,0 +1,32 @@
+As far as I understand;
+
+sort by only sorts with in the reducer
+
+order by orders things globally but shoves everything into one reducers
+cluster by intelligently distributes stuff into reducers by the key hash and make a sort by
+So my question is does cluster by guarantee a global order? distribute by puts the same keys into same 
+reducers but what about the adjacent keys?
+
+The only document I can find on this is here and from the example it seems like it orders them globally. 
+But from the definition I feel like it doesn't always do that.
+--------------------------------------------------------------------------------------------------
+
+A shorter answer: yes, CLUSTER BY guarantees global ordering, 
+provided you're willing to join the multiple output files yourself.
+
+The longer version:
+
+ORDER BY x: guarantees global ordering, but does this by pushing all data through just one reducer. 
+This is basically unacceptable for large datasets. You end up one sorted file as output.
+
+SORT BY x: orders data at each of N reducers, but each reducer can receive overlapping ranges of data. 
+You end up with N or more sorted files with overlapping ranges.
+
+DISTRIBUTE BY x: ensures each of N reducers gets non-overlapping ranges of x, but doesn't sort the output of each reducer. 
+You end up with N or more unsorted files with non-overlapping ranges.
+
+CLUSTER BY x: ensures each of N reducers gets non-overlapping ranges, then sorts by those ranges at the reducers. 
+This gives you global ordering, and is the same as doing (DISTRIBUTE BY x and SORT BY x). You end up with N or more sorted files
+with non-overlapping ranges.
+
+Make sense? So CLUSTER BY is basically the more scalable version of ORDER BY

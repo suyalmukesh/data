@@ -1,0 +1,25 @@
+RDD - A GOOD NOTE ON IT
+---------------------------------------------------------------------------------
+
+RDD’s are collection of data items that are split into partitions and can be stored in-memory
+ on workers nodes of the spark cluster. In terms of datasets, apache spark supports two types of RDD’s –
+ Hadoop Datasets which are created from the files stored on HDFS and parallelized collections 
+ which are based on existing Scala collections. 
+ Spark RDD’s support two different types of operations – Transformations and Actions.  
+
+DAG - Direct - Transformation is an action which transitions data partition state from A to B.
+               Acyclic -Transformation cannot return to the older partition
+               DAG is a sequence of computations performed on data where each node is an 
+               RDD partition and edge is a transformation on top of data.   
+               The DAG abstraction helps eliminate the Hadoop MapReduce multistage execution model 
+               and provides performance enhancements over Hadoop.
+
+=============================================================================================================
+
+QUESTIONS :
+
+1. OPERATIONS SPECIFIC TO RDD WITH EXAMPLES
+2. OPERATIONS SPECIFIC TO PAIR-RDD
+3. GIVE EXAMPLE OF JOINING 2 RDDs
+4. LIST COMMON TRANSFORMATIONS
+5. LIST SHUFFLE OPERATIONS

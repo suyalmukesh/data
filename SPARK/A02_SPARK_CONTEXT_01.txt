@@ -1,0 +1,102 @@
+from pyspark import SparkContext,SparkConf
+conf = SparkConf().setAppName(appName).setMaster(master)
+sc = SparkContext(conf=conf)
+
+=================================================================
+
+from pyspark.sql import SparkSession
+from pyspark import SparkContext
+from pyspark import SparkConf
+from pyspark.sql import SQLContext
+
+spark = SparkSession\
+    .builder\
+    .appName("example-spark")\
+    .config("spark.sql.crossJoin.enabled","true")\
+    .getOrCreate()
+sc = SparkContext()
+sqlContext = SQLContext(sc)
+
+-------------------------------------------------------------------
+
+class pyspark.SparkContext (
+                            master = None,
+                            appName = None, 
+                            sparkHome = None, 
+                            pyFiles = None, 
+                            environment = None, 
+                            batchSize = 0, 
+                            serializer = PickleSerializer(), 
+                            conf = None, 
+                            gateway = None, 
+                            jsc = None, 
+                            profiler_cls = <class 'pyspark.profiler.BasicProfiler'>
+                           )        
+
+Master - It is the URL of the cluster it connects to.
+appName - Name of your job.
+sparkHome - Spark installation directory.
+pyFiles - The .zip or .py files to send to the cluster and add to the PYTHONPATH.
+Environment - Worker nodes environment variables.
+batchSize - The number of Python objects represented as a single Java object. Set 1 to disable batching, 0 to automatically choose                                       the batch size based on object sizes, or -1 to use an unlimited batch size.
+Serializer - RDD serializer.
+Conf - An object of L{SparkConf} to set all the Spark properties.
+Gateway - Use an existing gateway and JVM, otherwise initializing a new JVM.
+JSC - The JavaSparkContext instance.
+profiler_cls - A class of custom Profiler used to do profiling (the default is pyspark.profiler.BasicProfiler).
+
+-------------------------------------------------------------------------
+FUNCTIONS OF SPARKCONTEXT IN APACHE SPARK
+           1. To get the current status of Spark Application
+           2. To set the configuration
+           3. To Access various services
+           4. To Cancel a job
+           5. To Cancel a stage
+           6. For Closure cleaning in Spark
+           7. To Register Spark listener
+           8. Programmable Dynamic allocation
+           9. To access persistent RDD
+           10.To unpersist RDDs
+
+-----------------------------------------------------------------
+
+QUESTIONS ON SPARK CONTEXT :
+
+1.
+Idiomatic way to create a spark context with a default master
+
+Is there an idiomatic way to create a spark context, that if no other master is provided will default to some fall back master?
+
+2.
+HOW TO SET NUM OF EXECUTORS, EXECUTOR MEMORY , EXECUTOR CORE USING SPARK CONTEXT ?
+
+from pyspark import SparkContext,SparkConf
+
+conf = SparkConf().setAppName("Mukesh app").setMaster(local[2])
+sc = SparkContext(conf=conf)
+
+
+
+------
+
+val conf = new SparkConf()
+      .setMaster("master_url") // this is where the master is specified
+      .setAppName("SparkExamplesMinimal")
+      .set("spark.local.ip","xx.xx.xx.xx") // helps when multiple network interfaces are present. The driver must be in the same network as the master and slaves
+      .set("spark.driver.host","xx.xx.xx.xx") // same as above. This duality might disappear in a future version
+
+val sc = new spark.SparkContext(conf)
+    // etc...
+
+
+------
+
+To explain a bit more on the different roles:
+
+The driver prepares the context and declares the operations on the data using RDD transformations and actions.
+The driver submits the serialized RDD graph to the master. The master creates tasks out of it and submits them
+ to the workers for execution. It coordinates the different job stages.
+The workers is where the tasks are actually executed. They should have the resources and network connectivity 
+required to execute the operations requested on the RDDs.
+
+ 

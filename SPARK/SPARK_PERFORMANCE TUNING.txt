@@ -1,0 +1,22 @@
+PERFORMANCE TUNING : 
+
+=======================================================================
+
+Apache Spark - Best Practices and Tuning (https://umbertogriffo.gitbooks.io/apache-spark-best-practices-and-tuning/content/ )
+
+------------------------------------------------------------------------
+Top 5 Mistakes When Writing Spark Applications
+
+<YouTube>   https://www.youtube.com/watch?v=WyfHUNnMutg
+
+------------------------------------------------------------------------
+SOME EXAMPLES OF SCALA-SPARK , LOOKS GOOD
+
+https://www.programcreek.com/scala/org.apache.spark.SparkContext
+
+-------------------------------------------------------------------------
+
+Read - Best for Architecture and related 
+http://site.clairvoyantsoft.com/understanding-resource-allocation-configurations-spark-application/
+
+----------------------------------------------------------------------------

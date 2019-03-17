@@ -1,0 +1,62 @@
+|--------------------------------------------------------------------------------------------------|
+|                                    PARTITION AND PARTITIONERS                                                     |--------------------------------------------------------------------------------------------------|
+
+PARTITIONS :
+
+
+Partitions also known as ‘Split’ in HDFS, is a logical chunk of data set which may be in the range of Petabyte, 
+Terabytes and distributed across the cluster.
+By Default, Spark creates one Partition for each block of the file (For HDFS)
+Default block size for HDFS block is 64 MB (Hadoop Version 1) / 128 MB (Hadoop Version 2) so as the split size.
+However, one can explicitly specify the number of partitions to be created.
+Partitions are basically used to speed up the data processing.
+
+
+PARTITIONER :
+
+An object that defines how the elements in a key-value pair RDD are partitioned by key. Maps each key to a partition ID,
+from 0 to (number of partitions – 1)
+Partitioner captures the data distribution at the output. A scheduler can optimize future operation based on the type of partitioner. 
+(i.e. if we perform any operation say transformation or action which require shuffling across nodes in that we may need the partitioner. 
+Please refer reduceByKey() transformation in the forum)
+Basically there are three types of partitioners in Spark:
+(1) Hash-Partitioner (2) Range-Partitioner (3) One can make its Custom Partitioner
+
+Property Name : spark.default.parallelism
+Default Value: For distributed shuffle operations like reduceByKey and join, the largest number of partitions in a parent RDD.
+For operations like parallelize with no parent RDDs, it depends on the cluster manager:
+•Local mode: number of cores on the local machine
+•Mesos fine-grained mode: 8
+•Others: total number of cores on all executor nodes or 2, whichever is larger
+Meaning : Default number of partitions in RDDs returned by transformations like join.
+
+
+
+Ans. Partition in Spark is similar to split in HDFS. A partition in Spark is a logical division of data stored on a node in the cluster. 
+They are the basic units of parallelism in Apache Spark. RDDs are a collection of partitions.When some actions are executed, a task is launched
+per partition.
+
+By default, partitions are automatically created by the framework. However, the number of partitions in Spark are configurable to suit the needs.
+For the number of partitions, if spark.default.parallelism is set, then we should use the value from SparkContext defaultParallelism, 
+othewrwise we suould use the max number of upstream partitions. Unless spark.default.parallelism is set, the number of partitions will 
+be the same as that of the largest upstream RDD, as this would least likely cause an out-of-memory errors.
+
+A partitioner is an object that defines how the elements in a key-value pair RDD are partitioned by key, maps each key to a partition ID from 0 to numPartitions – 1. It captures the data distribution at the output. With the help of partitioner, the scheduler can optimize the future operations. 
+The contract of partitioner ensures that records for a given key have to reside on a single partition.
+We should choose a partitioner to use for a cogroup-like operations. If any of the RDDs already has a partitioner, we should choose that one. 
+Otherwise, we use a default HashPartitioner.
+
+There are three types of partitioners in Spark :
+a) Hash Partitioner b) Range Partitioner c) Custom Partitioner
+Hash – Partitioner : Hash- partitioning attempts to spread the data evenly across various partitions based on the key.
+Range – Partitioner : In Range- Partitioning method , tuples having keys with same range will appear on the same machine.
+
+RDDs can be created with specific partitioning in two ways :
+i) Providing explicit partitioner by calling partitionBy method on an RDD
+ii) Applying transformations that return RDDs with specific partitioners .
+
+
+
+
+
+
