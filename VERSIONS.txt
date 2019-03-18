@@ -1,5 +1,6 @@
 HIVE 2.3.4
 
+
 SPARK 2.4.0
 
 SQOOP 1.4.7
